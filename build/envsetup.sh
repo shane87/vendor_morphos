@@ -68,10 +68,9 @@ function breakfast()
 {
     target=$1
     local variant=$2
-    LINEAGE_DEVICES_ONLY="true"
     unset LUNCH_MENU_CHOICES
     add_lunch_combo full-eng
-    for f in `/bin/ls vendor/lineage/vendorsetup.sh 2> /dev/null`
+    for f in `/bin/ls vendor/morphos/vendorsetup.sh 2> /dev/null`
         do
             echo "including $f"
             . $f
@@ -87,12 +86,12 @@ function breakfast()
             # A buildtype was specified, assume a full device name
             lunch $target
         else
-            # This is probably just the Lineage model name
+            # This is probably just the model name
             if [ -z "$variant" ]; then
                 variant="userdebug"
             fi
 
-            lunch lineage_$target-$variant
+            lunch morphos_$target-$variant
         fi
     fi
     return $?
@@ -960,7 +959,7 @@ alias cmkap='dopush cmka'
 
 function repopick() {
     T=$(gettop)
-    $T/vendor/lineage/build/tools/repopick.py $@
+    $T/vendor/morphos/build/tools/repopick.py $@
 }
 
 function fixup_common_out_dir() {
@@ -991,7 +990,7 @@ if [ -d $(gettop)/prebuilts/snapdragon-llvm/toolchains ]; then
             export SDCLANG=true
             export SDCLANG_PATH=$(gettop)/prebuilts/snapdragon-llvm/toolchains/llvm-Snapdragon_LLVM_for_Android_4.0/prebuilt/linux-x86_64/bin
             export SDCLANG_PATH_2=$(gettop)/prebuilts/snapdragon-llvm/toolchains/llvm-Snapdragon_LLVM_for_Android_4.0/prebuilt/linux-x86_64/bin
-            export SDCLANG_LTO_DEFS=$(gettop)/vendor/lineage/build/core/sdllvm-lto-defs.mk
+            export SDCLANG_LTO_DEFS=$(gettop)/vendor/morphos/build/core/sdllvm-lto-defs.mk
             ;;
     esac
 fi

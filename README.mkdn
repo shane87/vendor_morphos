@@ -1,37 +1,51 @@
-LineageOS
+MorphOS
 ===========
 
 Getting started
 ---------------
 
-To get started with Android/LineageOS, you'll need to get
-familiar with [Repo](https://source.android.com/source/using-repo.html) and [Version Control with Git](https://source.android.com/source/version-control.html).
+Check out the [AOSP build instructions](http://source.android.com/setup) before starting with MorphOS  
+> Pay attention to [Repo](https://source.android.com/source/using-repo.html) and [Version Control with Git](https://source.android.com/source/version-control.html).
 
-To initialize your local repository using the LineageOS trees, use a command like this:
+To initialize your local repository using the MorphOS trees, use a command like this:
 ```
-repo init -u git://github.com/LineageOS/android.git -b lineage-16.0
+repo init -u git://github.com/shane87/android.git -b pie
 ```
 Then to sync up:
 ```
 repo sync
 ```
-Please see the [LineageOS Wiki](https://wiki.lineageos.org/) for building instructions, by device.
 
+Pull device/kernel source
+-------------------------
 
-Submitting patches
-------------------
-Patches are always welcome! Please submit your patches via LineageOS Gerrit!
+Once the sync is finished, use the following commands to pull device/kernel sources:
+```
 
-Simply follow our guide on [how to submit patches](https://wiki.lineageos.org/submitting-patch-howto.html).
+. build/envsetup.sh
+breakfast $(device)
+```
+Where $(device) is the codename of the device you want to build (ex. cheeseburger for OP5)
 
-To view the status of your and others' patches, visit [LineageOS Gerrit Code Review](https://review.lineageos.org/).
+Build MorphOS
+-------------
 
+When the device/kernel sources are downloaded, you are ready to make MorphOS
+```
+make bacon
+```
 
-Buildbot
---------
+Alternately, you can use the mka command to build with enhanced scheduling and multiple threads:
+```
+mka bacon
+```
 
-All supported devices are built weekly and periodically as changes are committed to ensure the source trees remain buildable.
+Remember to fetch updates every now and then!
+```
+repo sync
+```
 
-You can view the current build statuses at [LineageOS Jenkins](https://jenkins.lineageos.org/).
-
-Builds produced weekly by the buildbot can be downloaded from [LineageOS downloads](https://download.lineageos.org/).
+And clean your built files from time to time:
+```
+make clean && make clobber
+```
