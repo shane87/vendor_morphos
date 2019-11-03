@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product, build/target/product/aosp_x86_64.mk)
+$(call inherit-product, build/target/product/aosp_arm64.mk)
 
-include vendor/morphos/build/target/product/lineage_generic_target.mk
+include vendor/morphos/build/target/product/morphos_generic_target.mk
 
-PRODUCT_NAME := lineage_x86_64
+PRODUCT_NAME := morphos_arm64

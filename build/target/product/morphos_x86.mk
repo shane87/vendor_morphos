@@ -14,8 +14,8 @@
 
 $(call inherit-product, build/target/product/aosp_x86.mk)
 
-include vendor/morphos/build/target/product/lineage_generic_target.mk
+include vendor/morphos/build/target/product/morphos_generic_target.mk
 
 TARGET_USES_64_BIT_BINDER := true
 
-PRODUCT_NAME := lineage_x86
+PRODUCT_NAME := morphos_x86

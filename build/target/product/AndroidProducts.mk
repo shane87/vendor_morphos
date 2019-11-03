@@ -15,7 +15,7 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_arm.mk \
-    $(LOCAL_DIR)/lineage_arm64.mk \
-    $(LOCAL_DIR)/lineage_x86.mk \
-    $(LOCAL_DIR)/lineage_x86_64.mk
+    $(LOCAL_DIR)/morphos_arm.mk \
+    $(LOCAL_DIR)/morphos_arm64.mk \
+    $(LOCAL_DIR)/morphos_x86.mk \
+    $(LOCAL_DIR)/morphos_x86_64.mk

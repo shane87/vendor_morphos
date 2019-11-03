@@ -1,9 +1,9 @@
-# LineageOS System Version
+# MorphOS System Version
 ADDITIONAL_BUILD_PROPERTIES += \
-    ro.lineage.version=$(LINEAGE_VERSION) \
-    ro.lineage.releasetype=$(LINEAGE_BUILDTYPE) \
-    ro.lineage.build.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
-    ro.modversion=$(LINEAGE_VERSION) \
+    ro.morphos.version=$(MORPHOS_VERSION) \
+    ro.morphos.releasetype=$(MORPHOS_BUILDTYPE) \
+    ro.morphos.build.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
+    ro.modversion=$(MORPHOS_VERSION) \
     ro.lineagelegal.url=https://lineageos.org/legal
 
 # LineageOS Platform Display Version

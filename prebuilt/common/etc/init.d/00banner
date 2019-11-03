@@ -2,12 +2,12 @@
 #
 # Print startup info
 #
-L="log -p i -t lineage"
+L="log -p i -t morphos"
 
-$L "_ _                                       "
-$L "| (_)_ __   ___  __ _  __ _  ___  ___  ___ "
-$L "| | | '_ \\ / _ \\/ _\` |/ _\` |/ _ \\/ _ \\/ __|"
-$L "| | | | | |  __/ (_| | (_| |  __/ (_) \\__ \\"
-$L "|_|_|_| |_|\\___|\\__,_|\\__, |\\___|\\___/|___/"
-$L "                      |___/"
-$L "Welcome to Android `getprop ro.build.version.release` / LineageOS-`getprop ro.lineage.version`";
+$L "    __  ___                 __    ____  _____"
+$L "   /  |/  /___  _________  / /_  / __ \/ ___/"
+$L "  / /|_/ / __ \/ ___/ __ \/ __ \/ / / /\__ \ "
+$L " / /  / / /_/ / /  / /_/ / / / / /_/ /___/ / "
+$L "/_/  /_/\____/_/  / .___/_/ /_/\____//____/  "
+$L "                 /_/                         "
+$L "Welcome to Android `getprop ro.build.version.release` / MorphOS-`getprop ro.morphos.version`";

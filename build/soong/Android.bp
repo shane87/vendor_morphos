@@ -1,6 +1,6 @@
 bootstrap_go_package {
-    name: "soong-lineage",
-    pkgPath: "lineage/soong/android",
+    name: "soong-morphos",
+    pkgPath: "morphos/soong/android",
     srcs: [
         "android/config.go",
         "android/variable.go",
@@ -8,8 +8,8 @@ bootstrap_go_package {
 }
 
 bootstrap_go_package {
-    name: "soong-lineage-generator",
-    pkgPath: "lineage/soong/generator",
+    name: "soong-morphos-generator",
+    pkgPath: "morphos/soong/generator",
     deps: [
         "blueprint",
         "blueprint-pathtools",
@@ -24,7 +24,7 @@ bootstrap_go_package {
     pluginFor: ["soong_build"],
 }
 
-lineage_generator {
+morphos_generator {
     name: "generated_kernel_includes",
 
     // The headers make command
