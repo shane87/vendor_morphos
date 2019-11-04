@@ -129,7 +129,7 @@ def add_to_local_manifest(path, name, remote, branch=None):
             branch = "lineage-16.0"
         if not (name.find("LineageOS/") == 0):
             name = "LineageOS/" + name
-    if (remote == "morphos"):
+    if (remote == "shane87"):
         if (branch == None):
             branch = "pie"
         if not (name.find("shane87/") == 0):
@@ -150,6 +150,8 @@ def add_to_local_manifest(path, name, remote, branch=None):
 
 
 def get_from_github(device):
+        if (device.startswith("morphos_")):
+             device = device[8:]
         print("Going to fetch %s from MorphOS github" % device)
         try:
             authtuple = netrc.netrc().authenticators("api.github.com")
@@ -175,11 +177,11 @@ def get_from_github(device):
             print("Failed to parse return data from GitHub")
             sys.exit()
 
-        for res in result['items']:
+        for res in result.get('items', []):
             if (res['name'].startswith("device_") and res['name'].endswith("_%s" % device)):
                 print("Found %s" % res['name'])
                 devicepath = res['name'].replace("_","/")
-                if add_to_local_manifest(devicepath, res['full_name'], "morphos"):
+                if add_to_local_manifest(devicepath, res['full_name'], "shane87"):
                     reposync(res['full_name'])
                 break
 
@@ -233,7 +235,10 @@ reload_local_manifest()
 if not depsonly:
     get_from_github(args.device)
 
-checkdeps("device/*/%s" % args.device)
+cdrpath = args.device
+if (cdrpath.startswith("morphos_")):
+    cdrpath = cdrpath[8:]
+checkdeps("device/*/%s" % cdrpath)
 
 print("Checked dependency tree over : ")
 for repo in ran_checkdeps_on:
