@@ -259,119 +259,28 @@ PRODUCT_VERSION_MAJOR = 16
 PRODUCT_VERSION_MINOR = 0
 PRODUCT_VERSION_MAINTENANCE := 0
 
-ifeq ($(TARGET_VENDOR_SHOW_MAINTENANCE_VERSION),true)
-    MORPHOS_VERSION_MAINTENANCE := $(PRODUCT_VERSION_MAINTENANCE)
-else
-    MORPHOS_VERSION_MAINTENANCE := 0
-endif
-
-# Set MORPHOS_BUILDTYPE from the env RELEASE_TYPE, for jenkins compat
+MORPHOS_BUILD_DATE := $(shell LC_ALL=C date +%Y-%m-%d_%H%M)
+MORPHOS_BRANCH=pie
 
 ifndef MORPHOS_BUILDTYPE
-    ifdef RELEASE_TYPE
-        # Starting with "MORPHOS_" is optional
-        RELEASE_TYPE := $(shell echo $(RELEASE_TYPE) | sed -e 's|^MORPHOS_||g')
-        MORPHOS_BUILDTYPE := $(RELEASE_TYPE)
-    endif
+    MORPHOS_BUILDTYPE := unofficial
 endif
 
-# Filter out random types, so it'll reset to UNOFFICIAL
-ifeq ($(filter RELEASE NIGHTLY SNAPSHOT EXPERIMENTAL,$(MORPHOS_BUILDTYPE)),)
-    MORPHOS_BUILDTYPE :=
-endif
+MORPHOS_VERSION=$(TARGET_PRODUCT)_$(MORPHOS_BRANCH)_$(MORPHOS_BUILDTYPE)_$(MORPHOS_BUILD_DATE)
+MORPHOS_DISPLAY_VERSION := $(MORPHOS_VERSION)
 
-ifdef MORPHOS_BUILDTYPE
-    ifneq ($(MORPHOS_BUILDTYPE), SNAPSHOT)
-        ifdef MORPHOS_EXTRAVERSION
-            # Force build type to EXPERIMENTAL
-            MORPHOS_BUILDTYPE := EXPERIMENTAL
-            # Remove leading dash from MORPHOS_EXTRAVERSION
-            MORPHOS_EXTRAVERSION := $(shell echo $(MORPHOS_EXTRAVERSION) | sed 's/-//')
-            # Add leading dash to MORPHOS_EXTRAVERSION
-            MORPHOS_EXTRAVERSION := -$(MORPHOS_EXTRAVERSION)
-        endif
-    else
-        ifndef MORPHOS_EXTRAVERSION
-            # Force build type to EXPERIMENTAL, SNAPSHOT mandates a tag
-            MORPHOS_BUILDTYPE := EXPERIMENTAL
-        else
-            # Remove leading dash from MORPHOS_EXTRAVERSION
-            MORPHOS_EXTRAVERSION := $(shell echo $(MORPHOS_EXTRAVERSION) | sed 's/-//')
-            # Add leading dash to MORPHOS_EXTRAVERSION
-            MORPHOS_EXTRAVERSION := -$(MORPHOS_EXTRAVERSION)
-        endif
-    endif
-else
-    # If MORPHOS_BUILDTYPE is not defined, set to UNOFFICIAL
-    MORPHOS_BUILDTYPE := UNOFFICIAL
-    MORPHOS_EXTRAVERSION :=
-endif
-
-ifeq ($(MORPHOS_BUILDTYPE), UNOFFICIAL)
-    ifneq ($(TARGET_UNOFFICIAL_BUILD_ID),)
-        MORPHOS_EXTRAVERSION := -$(TARGET_UNOFFICIAL_BUILD_ID)
-    endif
-endif
-
-ifeq ($(MORPHOS_BUILDTYPE), RELEASE)
-    ifndef TARGET_VENDOR_RELEASE_BUILD_ID
-        MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(PRODUCT_VERSION_MAINTENANCE)$(PRODUCT_VERSION_DEVICE_SPECIFIC)-$(MORPHOS_BUILD)
-    else
-        ifeq ($(TARGET_BUILD_VARIANT),user)
-            ifeq ($(MORPHOS_VERSION_MAINTENANCE),0)
-                MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(MORPHOS_BUILD)
-            else
-                MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(MORPHOS_VERSION_MAINTENANCE)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(MORPHOS_BUILD)
-            endif
-        else
-            MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(PRODUCT_VERSION_MAINTENANCE)$(PRODUCT_VERSION_DEVICE_SPECIFIC)-$(MORPHOS_BUILD)
-        endif
-    endif
-else
-    ifeq ($(MORPHOS_VERSION_MAINTENANCE),0)
-        ifeq ($(MORPHOS_VERSION_APPEND_TIME_OF_DAY),true)
-            MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d_%H%M%S)-$(MORPHOS_BUILDTYPE)$(MORPHOS_EXTRAVERSION)-$(MORPHOS_BUILD)
-        else
-            MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d)-$(MORPHOS_BUILDTYPE)$(MORPHOS_EXTRAVERSION)-$(MORPHOS_BUILD)
-        endif
-    else
-        ifeq ($(MORPHOS_VERSION_APPEND_TIME_OF_DAY),true)
-            MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(MORPHOS_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d_%H%M%S)-$(MORPHOS_BUILDTYPE)$(MORPHOS_EXTRAVERSION)-$(MORPHOS_BUILD)
-        else
-            MORPHOS_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(MORPHOS_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d)-$(MORPHOS_BUILDTYPE)$(MORPHOS_EXTRAVERSION)-$(MORPHOS_BUILD)
-        endif
-    endif
-endif
+PRODUCT_GENERIC_PROPERTIES += \
+    ro.morphos.version=$(MORPHOS_VERSION) \
+    ro.morphos.branch=$(MORPHOS_BRANCH) \
+    ro.morphos.device=$(MORPHOS_DEVICE) \
+    ro.morphos.releasetype=$(MORPHOS_BUILDTYPE) \
+    ro.modversion=$(MORPHOS_VERSION) \
+    ro.morphos.display.version=$(MORPHOS_DISPLAY_VERSION)
 
 PRODUCT_EXTRA_RECOVERY_KEYS += \
     vendor/morphos/build/target/product/security/lineage
 
 -include vendor/lineage-priv/keys/keys.mk
-
-MORPHOS_DISPLAY_VERSION := $(MORPHOS_VERSION)
-
-ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),)
-ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),build/target/product/security/testkey)
-    ifneq ($(MORPHOS_BUILDTYPE), UNOFFICIAL)
-        ifndef TARGET_VENDOR_RELEASE_BUILD_ID
-            ifneq ($(MORPHOS_EXTRAVERSION),)
-                # Remove leading dash from MORPHOS_EXTRAVERSION
-                MORPHOS_EXTRAVERSION := $(shell echo $(MORPHOS_EXTRAVERSION) | sed 's/-//')
-                TARGET_VENDOR_RELEASE_BUILD_ID := $(MORPHOS_EXTRAVERSION)
-            else
-                TARGET_VENDOR_RELEASE_BUILD_ID := $(shell date -u +%Y%m%d)
-            endif
-        else
-            TARGET_VENDOR_RELEASE_BUILD_ID := $(TARGET_VENDOR_RELEASE_BUILD_ID)
-        endif
-        ifeq ($(MORPHOS_VERSION_MAINTENANCE),0)
-            MORPHOS_DISPLAY_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(MORPHOS_BUILD)
-        else
-            MORPHOS_DISPLAY_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(MORPHOS_VERSION_MAINTENANCE)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(MORPHOS_BUILD)
-        endif
-    endif
-endif
-endif
 
 -include $(WORKSPACE)/build_env/image-auto-bits.mk
 -include vendor/morphos/config/partner_gms.mk
