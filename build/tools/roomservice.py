@@ -186,7 +186,7 @@ def get_from_github(device):
 def checkdeps(repo_path):
     losdeps = glob.glob(repo_path + "/lineage.dependencies")
     morphosdeps = glob.glob(repo_path + "/morphos.dependencies")
-    if ((len(losdeps) + len(aokpdeps)) < 1):
+    if ((len(losdeps) + len(morphosdeps)) < 1):
         ran_checkdeps_on.append("NO_DEPS:\t\t" + repo_path)
         return
     else:
